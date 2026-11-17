@@ -92,6 +92,8 @@ p { margin: 0 0 1em; }
 .kucuk-not { font-size: .85rem; color: var(--soluk) !important; }
 
 /* Galeri */
+.galeri-baslik { margin: 8px 0 16px; color: var(--sari); }
+.galeri + .galeri-baslik { margin-top: 44px; }
 .galeri { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .galeri figure { margin: 0; border-radius: var(--yaricap); overflow: hidden; border: 1px solid var(--cizgi); background: #000; }
 .galeri figcaption { padding: 10px 14px; font-size: .9rem; color: var(--soluk); background: var(--yuzey); }
