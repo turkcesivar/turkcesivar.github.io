@@ -2,6 +2,35 @@
   "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. Metinlerde <strong>, <em>, <a> kullanılabilir.",
   "oyunlar": [
     {
+      "kimlik": "metro-last-light-redux",
+      "ad": "Metro Last Light Redux",
+      "durum": "hazir",
+      "eklenme": "2026-11-18",
+      "platform": ["Steam"],
+      "tur": ["Aksiyon", "FPS", "Korku"],
+      "satir": 21442,
+      "ozet": "menüler, altyazılar, görev defteri, ipuçları ve silah ekranı.",
+      "aciklama": "Metro 2033'ün devamı Last Light baştan sona Türkçe: Artyom'un Karanlık Olan'ın peşindeki yolculuğunun her satırı.",
+      "neler_turkce": [
+        "<strong>21.442 satırın tamamı:</strong> menüler, ayarlar, ara sahneler, altyazılar, görev defteri ve ipuçları",
+        "Silah özelleştirme ekranındaki parça açıklamaları",
+        "Karakter adları ve lakaplar (Pavel, Khan, Miller…) orijinal hâliyle bırakıldı",
+        "Ğ, ş, ı, İ harfleri oyunun kendi yazı tipine eklendi"
+      ],
+      "surum": "<strong>Redux</strong> sürümü. 2013'teki orijinal Metro: Last Light desteklenmiyor. Steam'de denendi; Epic'teki Redux sürümünde de çalışması beklenir.",
+      "kurulum": "Uygulamada Metro Last Light Redux'ı seç, <strong>Türkçe yap</strong>'a bas. Oyunda metin dilini English bırak, altyazıları aç.",
+      "kapak": "lastlight-pavel.jpg",
+      "gorseller": [
+        {"dosya": "lastlight-acilis.jpg", "yazi": "Açılış ve ara sahneler", "alt": "Açılış sahnesinde Türkçe altyazı"},
+        {"dosya": "lastlight-pavel.jpg", "yazi": "Konuşma altyazıları", "alt": "Pavel'in konuşmasında Türkçe altyazı"},
+        {"dosya": "lastlight-ayarlar.jpg", "yazi": "Menüler ve ayarlar", "alt": "Türkçe oyun seçenekleri menüsü"},
+        {"dosya": "lastlight-defter.jpg", "yazi": "Görev defteri", "alt": "Görev defterinde Türkçe el yazısı"},
+        {"dosya": "lastlight-cephanelik.jpg", "yazi": "Karakterler", "alt": "Cephanelikte Türkçe altyazı"},
+        {"dosya": "lastlight-silah.jpg", "yazi": "Silah ekranı", "alt": "Silah parçası açıklaması Türkçe"},
+        {"dosya": "lastlight-d6.jpg", "yazi": "Hikâye", "alt": "D6 bölümünde Türkçe altyazı"}
+      ]
+    },
+    {
       "kimlik": "metro-exodus",
       "eski_baglanti": "metro-exodus",
       "ad": "Metro Exodus Enhanced Edition",
@@ -19,7 +48,7 @@
         "Karakter adları ve lakaplar (Miller, Duke, Idiot…) orijinal hâliyle bırakıldı",
         "Ğ, ş, ı, İ harfleri oyunun kendi yazı tipine eklendi"
       ],
-      "surum": "Yalnızca <strong>Enhanced Edition</strong>. Normal sürümü Steam'de satın aldıysan Enhanced Edition kütüphanende ayrı bir oyun olarak ücretsiz durur; onu indirmen yeterli. Normal sürüm şimdilik desteklenmiyor.",
+      "surum": "<strong>Enhanced Edition</strong> (Steam, Epic) ve <strong>normal sürüm</strong> (Steam). İkisi aynı çeviriyi kullanır; uygulama hangisini kurduğunu kendisi anlar.",
       "kurulum": "Uygulamada Metro Exodus Enhanced Edition'ı seç, <strong>Türkçe yap</strong>'a bas. Oyunda dili English bırak, altyazıları aç.",
       "kapak": "exodus-doktor.jpg",
       "gorseller": [
