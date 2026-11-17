@@ -1,66 +1,86 @@
-// Türkçesi Var sitesi: oyun ayrıntı sekmeleri ve görsel büyütücü. Kütüphane yok.
+// Türkçesi Var sitesi: tıklanır oyun kartları, oyun listesi süzgeci ve görsel büyütücü. Kütüphane yok.
 (function () {
   "use strict";
   document.documentElement.classList.add("js");
 
-  // --- Oyun sekmeleri -------------------------------------------------------
-  var sekmeler = Array.prototype.slice.call(document.querySelectorAll('.sekmeler [role="tab"]'));
-  var paneller = Array.prototype.slice.call(document.querySelectorAll(".detay"));
-  var kimlikler = paneller.map(function (p) { return p.id; });
-
-  function oyunSec(kimlik, odakla) {
-    if (kimlikler.indexOf(kimlik) < 0) kimlik = kimlikler[0];
-    paneller.forEach(function (p) { p.hidden = p.id !== kimlik; });
-    sekmeler.forEach(function (s) {
-      var secili = s.dataset.oyun === kimlik;
-      s.setAttribute("aria-selected", secili ? "true" : "false");
-      s.tabIndex = secili ? 0 : -1;
-      if (secili && odakla) s.focus();
-    });
-  }
-
-  function bolumeGit(kimlik) {
-    oyunSec(kimlik);
-    if (history.replaceState) history.replaceState(null, "", "#" + kimlik);
-    document.getElementById("oyunun-icinden").scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  sekmeler.forEach(function (s, i) {
-    s.addEventListener("click", function () {
-      oyunSec(s.dataset.oyun);
-      if (history.replaceState) history.replaceState(null, "", "#" + s.dataset.oyun);
-    });
-    s.addEventListener("keydown", function (e) {
-      var yon = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-      if (!yon) return;
-      e.preventDefault();
-      var hedef = sekmeler[(i + yon + sekmeler.length) % sekmeler.length];
-      oyunSec(hedef.dataset.oyun, true);
-    });
-  });
-
-  // Kartın tamamı tıklanabilir; içindeki gerçek bağlantılar kendi işini yapar.
+  // --- Tıklanır oyun kartları ----------------------------------------------
+  // Kartın tamamı oyunun sayfasına gider; içindeki başka bağlantılar kendi işini yapar.
   Array.prototype.slice.call(document.querySelectorAll(".oyun")).forEach(function (kart) {
     var ac = kart.querySelector(".oyun-ac");
     if (!ac) return;
     kart.classList.add("tiklanir");
     kart.addEventListener("click", function (e) {
-      if (e.target.closest("a") && e.target.closest("a") !== ac) return;
-      e.preventDefault();
-      bolumeGit(ac.dataset.oyun);
+      if (e.target.closest("a")) return;
+      if (e.ctrlKey || e.metaKey) { window.open(ac.href, "_blank"); return; }
+      location.href = ac.href;
     });
   });
 
-  var ilk = location.hash.slice(1);
-  oyunSec(kimlikler.indexOf(ilk) >= 0 ? ilk : kimlikler[0]);
-  if (kimlikler.indexOf(ilk) >= 0) {
-    // Sayfa doğrudan #metro-2033 gibi bir adresle açıldıysa bölüme in.
-    setTimeout(function () { document.getElementById("oyunun-icinden").scrollIntoView(); }, 0);
+  // --- Tüm oyunlar: arama, durum süzgeci, sıralama ---------------------------
+  var oyunListesi = document.querySelector("[data-oyun-listesi]");
+  if (oyunListesi) {
+    var araclar = document.querySelector("[data-oyun-listesi-araclari]");
+    var ara = document.getElementById("oyun-ara");
+    var siralama = document.getElementById("siralama");
+    var durumDugmeleri = Array.prototype.slice.call(document.querySelectorAll("[data-durum-sec]"));
+    var sonucYazi = document.querySelector(".sonuc-sayisi");
+    var bos = document.querySelector(".bos-sonuc");
+    var kartlar = Array.prototype.slice.call(oyunListesi.querySelectorAll(".oyun"));
+    var secilenDurum = "tumu";
+    araclar.hidden = false;
+
+    // "İstanbul" ile "istanbul", "şehir" ile "sehir" aynı sayılsın.
+    var harf = { "ı": "i", "İ": "i", "ş": "s", "ğ": "g", "ç": "c", "ö": "o", "ü": "u", "â": "a", "î": "i", "û": "u" };
+    var sade = function (s) {
+      return s.toLocaleLowerCase("tr").replace(/[ıİşğçöüâîû]/g, function (h) { return harf[h]; })
+        .normalize("NFD").replace(/[̀-ͯ]/g, "").trim();
+    };
+    kartlar.forEach(function (k) { k._ara = sade(k.dataset.ara || k.dataset.ad); });
+
+    // Adres çubuğu: /oyunlar/?ara=metro&durum=hazir paylaşılabilsin.
+    var parametre = new URLSearchParams(location.search);
+    if (parametre.get("ara")) ara.value = parametre.get("ara");
+    if (parametre.get("durum") && durumDugmeleri.some(function (d) { return d.dataset.durumSec === parametre.get("durum"); })) {
+      secilenDurum = parametre.get("durum");
+    }
+    if (parametre.get("sira") === "ad") siralama.value = "ad";
+
+    var uygula = function () {
+      var aranan = sade(ara.value);
+      var sirali = kartlar.slice().sort(function (a, b) {
+        return siralama.value === "ad"
+          ? a.dataset.ad.localeCompare(b.dataset.ad, "tr")
+          : b.dataset.eklenme.localeCompare(a.dataset.eklenme);
+      });
+      var gorunen = 0;
+      sirali.forEach(function (k) {
+        var uyar = (secilenDurum === "tumu" || k.dataset.durum === secilenDurum) &&
+          (!aranan || k._ara.indexOf(aranan) >= 0);
+        k.hidden = !uyar;
+        if (uyar) gorunen++;
+        oyunListesi.appendChild(k);
+      });
+      durumDugmeleri.forEach(function (d) {
+        d.setAttribute("aria-pressed", d.dataset.durumSec === secilenDurum ? "true" : "false");
+      });
+      bos.hidden = gorunen > 0;
+      sonucYazi.textContent = aranan || secilenDurum !== "tumu" ? gorunen + " oyun bulundu" : "";
+
+      var p = new URLSearchParams();
+      if (ara.value.trim()) p.set("ara", ara.value.trim());
+      if (secilenDurum !== "tumu") p.set("durum", secilenDurum);
+      if (siralama.value === "ad") p.set("sira", "ad");
+      var q = p.toString();
+      if (history.replaceState) history.replaceState(null, "", location.pathname + (q ? "?" + q : ""));
+    };
+
+    ara.addEventListener("input", uygula);
+    siralama.addEventListener("change", uygula);
+    durumDugmeleri.forEach(function (d) {
+      d.addEventListener("click", function () { secilenDurum = d.dataset.durumSec; uygula(); });
+    });
+    uygula();
   }
-  window.addEventListener("hashchange", function () {
-    var h = location.hash.slice(1);
-    if (kimlikler.indexOf(h) >= 0) bolumeGit(h);
-  });
 
   // --- Görsel büyütücü ------------------------------------------------------
   var kutu = document.querySelector(".buyutec");

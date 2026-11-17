@@ -1,0 +1,61 @@
+{
+  "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. Metinlerde <strong>, <em>, <a> kullanılabilir.",
+  "oyunlar": [
+    {
+      "kimlik": "metro-exodus",
+      "eski_baglanti": "metro-exodus",
+      "ad": "Metro Exodus Enhanced Edition",
+      "durum": "hazir",
+      "eklenme": "2026-11-17",
+      "platform": ["Steam", "Epic Games"],
+      "tur": ["Aksiyon", "FPS", "Korku"],
+      "satir": 37652,
+      "ozet": "telsiz ve düşman konuşmaları, günlükler ve iki DLC (İki Albay, Sam'in Hikâyesi) dahil.",
+      "aciklama": "Metro Exodus baştan sona Türkçe: Moskova'dan çıkıp Aurora treniyle Rusya'yı boydan boya geçen yolculuğun her satırı ve iki hikâye DLC'si.",
+      "neler_turkce": [
+        "<strong>37.652 satırın tamamı:</strong> menüler, ayarlar, ara sahneler, altyazılar, günlükler, notlar ve ipuçları",
+        "Telsiz konuşmaları ve düşmanların kendi aralarındaki konuşmaları",
+        "İki DLC: <strong>İki Albay</strong> (The Two Colonels) ve <strong>Sam'in Hikâyesi</strong> (Sam's Story)",
+        "Karakter adları ve lakaplar (Miller, Duke, Idiot…) orijinal hâliyle bırakıldı",
+        "Ğ, ş, ı, İ harfleri oyunun kendi yazı tipine eklendi"
+      ],
+      "surum": "Yalnızca <strong>Enhanced Edition</strong>. Normal sürümü Steam'de satın aldıysan Enhanced Edition kütüphanende ayrı bir oyun olarak ücretsiz durur; onu indirmen yeterli. Normal sürüm şimdilik desteklenmiyor.",
+      "kurulum": "Uygulamada Metro Exodus Enhanced Edition'ı seç, <strong>Türkçe yap</strong>'a bas. Oyunda dili English bırak, altyazıları aç.",
+      "kapak": "exodus-doktor.jpg",
+      "gorseller": [
+        {"dosya": "exodus-doktor.jpg", "yazi": "Uzun konuşmalar da tek parça Türkçe", "alt": "Doktorun Türkçe altyazılı konuşması"},
+        {"dosya": "exodus-miller-anna.jpg", "yazi": "Ara sahne ve konuşmalar", "alt": "Miller ve Anna'nın Türkçe altyazılı konuşması"},
+        {"dosya": "exodus-gunluk.jpg", "yazi": "Günlükler ve notlar", "alt": "Türkçe günlük sayfası"},
+        {"dosya": "exodus-dlc.jpg", "yazi": "DLC'ler: İki Albay ve Sam'in Hikâyesi", "alt": "İki Albay ve Sam'in Hikâyesi DLC menüsü Türkçe"},
+        {"dosya": "exodus-ayarlar.jpg", "yazi": "Menüler ve ayarlar", "alt": "Türkçe oyun ayarları"}
+      ]
+    },
+    {
+      "kimlik": "metro-2033-redux",
+      "eski_baglanti": "metro-2033",
+      "ad": "Metro 2033 Redux",
+      "durum": "hazir",
+      "eklenme": "2026-11-15",
+      "platform": ["Steam"],
+      "tur": ["Aksiyon", "FPS", "Korku"],
+      "satir": 21442,
+      "ozet": "menüler, altyazılar, notlar ve ipuçları.",
+      "aciklama": "Moskova metrosunda geçen ilk Metro oyunu tamamen Türkçe. Türkçesi Var'ın ilk oyunu.",
+      "neler_turkce": [
+        "<strong>21.442 satırın tamamı:</strong> menüler, ayarlar, ara sahneler, altyazılar, notlar ve ipuçları",
+        "Prolog ve bölüm geçiş yazıları",
+        "Karakter adları ve lakaplar orijinal hâliyle bırakıldı",
+        "Ğ, ş, ı, İ harfleri oyunun kendi yazı tipine eklendi"
+      ],
+      "surum": "<strong>Redux</strong> sürümü. 2010'daki orijinal Metro 2033 desteklenmiyor.",
+      "kurulum": "Uygulamada Metro 2033 Redux'ı seç, <strong>Türkçe yap</strong>'a bas. Oyunda dili English bırak, altyazıları aç.",
+      "kapak": "metro2033-altyazi.jpg",
+      "gorseller": [
+        {"dosya": "metro2033-prolog.jpg", "yazi": "Prolog ve bölüm geçişleri", "alt": "Prolog ekranı Türkçe"},
+        {"dosya": "metro2033-sahne.jpg", "yazi": "Ara sahne altyazıları", "alt": "Ara sahnede Türkçe altyazı"},
+        {"dosya": "metro2033-menu.jpg", "yazi": "Menüler", "alt": "Türkçe ayarlar menüsü"},
+        {"dosya": "metro2033-altyazi.jpg", "yazi": "Konuşmalar ve ipuçları", "alt": "Oyun içi Türkçe altyazı ve ipucu"}
+      ]
+    }
+  ]
+}
