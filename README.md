@@ -4,7 +4,7 @@
 
 ## Yeni oyun eklemek
 
-1. Oyunun 4–5 ekran görüntüsünü 1280 piksel genişliğe küçültüp `gorseller/` klasörüne koy.
+1. Oyunun 4–5 ekran görüntüsünü **küçültmeden** (Steam'in F12 ile kaydettiği asıl boyutta) `gorseller/` klasörüne koy. `uret.py` 640, 1024 ve 1600 piksellik kopyaları kendisi üretir; büyütülmüş görünümde asıl dosya açılır.
 2. `veri/oyunlar.json` dosyasına bir kayıt ekle (var olan kayıtları örnek al). `durum`: `hazir`, `cevriliyor` ya da `oylamada`.
 3. `main` dalına gönder. GitHub siteyi kendiliğinden üretip yayınlar (`.github/workflows/yayinla.yml`).
 

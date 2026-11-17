@@ -17,6 +17,8 @@ import json
 import shutil
 from pathlib import Path
 
+from PIL import Image
+
 KOK = Path(__file__).resolve().parent
 CIKTI = KOK / "_site"
 SITE = "https://turkcesivar.github.io"
@@ -26,6 +28,10 @@ GITHUB = "https://github.com/turkcesivar/turkcesi-var"
 KREOSUS = "https://kreosus.com/turkcesivar"
 ISTEK_FORMU = GITHUB + "/issues/new?template=oyun-istegi.yml"
 VITRIN_SAYISI = 6
+BOYLAR = (640, 1024, 1600)  # her oyun görselinden üretilen genişlikler; asıl dosya da yayınlanır
+KART_BOYU = "(max-width: 900px) calc(100vw - 32px), 360px"
+GALERI_BOYU = "(max-width: 900px) calc(100vw - 72px), 1060px"
+GALERI_KUCUK_BOYU = "(max-width: 900px) calc(50vw - 46px), 530px"
 
 DURUMLAR = {
     "hazir": ("✓ Hazır", "Hazır"),
@@ -54,6 +60,48 @@ def surum(dosya):
 
 def arama_metni(o):
     return " ".join([o["ad"], *o.get("tur", []), *o.get("platform", [])]).lower()
+
+
+# --- Görseller: her boy üretilir, tarayıcı ekranına uygun olanı seçer --------
+
+_olcu = {}
+
+
+def olcu(dosya):
+    if dosya not in _olcu:
+        with Image.open(KOK / "gorseller" / dosya) as im:
+            _olcu[dosya] = im.size
+    return _olcu[dosya]
+
+
+def boy_adi(dosya, w):
+    kok_ad = dosya.rsplit(".", 1)[0]
+    return f"/gorseller/boy/{kok_ad}-{w}.jpg"
+
+
+def resim(dosya, alt, sizes, yukle="lazy", buyuk=False):
+    """srcset'li <img>. buyuk=True ise büyüteç asıl çözünürlüğü açar."""
+    gen, yuk = olcu(dosya)
+    parcalar = [f"{boy_adi(dosya, w)} {w}w" for w in BOYLAR if w < gen]
+    parcalar.append(f"/gorseller/{dosya} {gen}w")
+    varsayilan = boy_adi(dosya, 1024) if gen > 1024 else f"/gorseller/{dosya}"
+    ek = f' data-buyuk="/gorseller/{dosya}"' if buyuk else ""
+    return (f'<img src="{varsayilan}" srcset="{", ".join(parcalar)}" sizes="{sizes}" '
+            f'alt="{e(alt)}" loading="{yukle}" decoding="async" width="{gen}" height="{yuk}"{ek}>')
+
+
+def boylari_uret(dosyalar):
+    hedef = CIKTI / "gorseller" / "boy"
+    hedef.mkdir(parents=True, exist_ok=True)
+    for dosya in sorted(dosyalar):
+        with Image.open(KOK / "gorseller" / dosya) as im:
+            im = im.convert("RGB")
+            for w in BOYLAR:
+                if w >= im.width:
+                    continue
+                h = round(im.height * w / im.width)
+                im.resize((w, h), Image.LANCZOS).save(
+                    CIKTI / boy_adi(dosya, w).lstrip("/"), "JPEG", quality=86, optimize=True, progressive=True)
 
 
 # --- Ortak parçalar ----------------------------------------------------------
@@ -142,7 +190,7 @@ def kart(o, baslik_etiketi="h3"):
         satir = ""
         ozet = {"i": "İ", "ı": "I"}.get(ozet[0], ozet[0].upper()) + ozet[1:]
     return f"""          <article class="oyun" data-durum="{o['durum']}" data-ad="{e(o['ad'])}" data-eklenme="{o['eklenme']}" data-ara="{e(arama_metni(o))}">
-            <img src="/gorseller/{o['kapak']}" alt="{e(o['ad'])} Türkçe" loading="lazy" width="1280" height="720">
+            {resim(o['kapak'], o['ad'] + ' Türkçe', KART_BOYU)}
             <div class="oyun-ic">
               <{baslik_etiketi}><a class="oyun-ac" href="/oyun/{o['kimlik']}/">{e(o['ad'])}</a></{baslik_etiketi}>
               <p class="platform">{e(' · '.join(o['platform']))}</p>
@@ -248,7 +296,7 @@ def oyun_sayfasi(o, oyunlar):
     turler = "".join(f'<span class="etiket-kucuk">{e(t)}</span>' for t in o.get("tur", []))
     neler = "\n".join(f"                <li>{m}</li>" for m in o.get("neler_turkce", []))
     gorseller = "\n".join(
-        f'            <figure><img src="/gorseller/{g["dosya"]}" alt="{e(g["alt"])}" loading="{"eager" if i == 0 else "lazy"}" width="1280" height="720"><figcaption>{e(g["yazi"])}</figcaption></figure>'
+        f'            <figure>{resim(g["dosya"], g["alt"], GALERI_BOYU if i == 0 else GALERI_KUCUK_BOYU, "eager" if i == 0 else "lazy", buyuk=True)}<figcaption>{e(g["yazi"])}</figcaption></figure>'
         for i, g in enumerate(o.get("gorseller", [])))
     digerleri = [d for d in sorted(oyunlar, key=lambda d: d["eklenme"], reverse=True) if d["kimlik"] != o["kimlik"]][:3]
     diger_html = ""
@@ -313,7 +361,7 @@ def oyun_sayfasi(o, oyunlar):
                 (f": {sayi(o['satir'])} satırın tamamı Türkçe" if o.get("satir") else "") +
                 ". Türkçesi Var ile tek tıkla kur, tek tıkla kaldır; oyun dosyası ya da DLL indirmeden.")
     return sayfa(f"{o['ad']} Türkçe Yama — Türkçesi Var", aciklama,
-                 f"/oyun/{o['kimlik']}/", govde, gorsel=f"/gorseller/{o['kapak']}")
+                 f"/oyun/{o['kimlik']}/", govde, gorsel=boy_adi(o["kapak"], 1600) if olcu(o["kapak"])[0] > 1600 else f"/gorseller/{o['kapak']}")
 
 
 def bulunamadi():
@@ -365,15 +413,17 @@ def main():
     for dogrulama in KOK.glob("google*.html"):
         shutil.copy2(dogrulama, CIKTI / dogrulama.name)
 
+    boylari_uret({o["kapak"] for o in oyunlar} | {g["dosya"] for o in oyunlar for g in o.get("gorseller", [])})
     yaz("index.html", ana_sayfa(oyunlar))
     yaz("oyunlar/index.html", oyunlar_sayfasi(oyunlar))
     for o in oyunlar:
         yaz(f"oyun/{o['kimlik']}/index.html", oyun_sayfasi(o, oyunlar))
     yaz("404.html", bulunamadi())
 
-    adresler = ["/", "/oyunlar/"] + [f"/oyun/{o['kimlik']}/" for o in oyunlar]
+    son = max(o["eklenme"] for o in oyunlar)
+    adresler = [("/", son), ("/oyunlar/", son)] + [(f"/oyun/{o['kimlik']}/", o.get("guncelleme", o["eklenme"])) for o in oyunlar]
     yaz("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "".join(f"  <url><loc>{SITE}{a}</loc></url>\n" for a in adresler) + "</urlset>\n")
+        + "".join(f"  <url><loc>{SITE}{a}</loc><lastmod>{t}</lastmod></url>\n" for a, t in adresler) + "</urlset>\n")
     yaz("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
     print(f"Site üretildi: {len(oyunlar)} oyun, {len(adresler)} sayfa -> {CIKTI}")
 

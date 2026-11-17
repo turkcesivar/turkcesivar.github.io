@@ -95,7 +95,7 @@
 
   function goster() {
     var img = liste[sira];
-    resim.src = img.currentSrc || img.src;
+    resim.src = img.dataset.buyuk || img.currentSrc || img.src;
     resim.alt = img.alt;
     var fc = img.closest("figure") && img.closest("figure").querySelector("figcaption");
     yazi.textContent = fc ? fc.textContent : img.alt;

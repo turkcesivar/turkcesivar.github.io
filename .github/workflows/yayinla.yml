@@ -26,7 +26,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Siteyi üret
-        run: python uret.py
+        run: |
+          pip install --quiet pillow
+          python uret.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
