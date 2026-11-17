@@ -361,6 +361,9 @@ def main():
     for dosya in ["stil.css", "site.js", "favicon.ico"]:
         shutil.copy2(KOK / dosya, CIKTI / dosya)
     shutil.copytree(KOK / "gorseller", CIKTI / "gorseller")
+    # Google Search Console doğrulama dosyaları (google....html) olduğu gibi yayınlanır.
+    for dogrulama in KOK.glob("google*.html"):
+        shutil.copy2(dogrulama, CIKTI / dogrulama.name)
 
     yaz("index.html", ana_sayfa(oyunlar))
     yaz("oyunlar/index.html", oyunlar_sayfasi(oyunlar))
