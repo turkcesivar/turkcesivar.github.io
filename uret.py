@@ -32,8 +32,8 @@ KREOSUS = "https://kreosus.com/turkcesivar"
 ISTEK_FORMU = GITHUB + "/issues/new?template=oyun-istegi.yml"
 EPOSTA = "iletisim@turkcesivar.com"
 # Son sürümün VirusTotal taraması. Yeni sürümde bu iki satırı güncelle.
-VIRUSTOTAL = "https://www.virustotal.com/gui/file/11f18389391760e51e58a85116a70d8be100d3905d26c25c22f34769d94961fa"
-VIRUSTOTAL_SONUC = "0/66"
+VIRUSTOTAL = "https://www.virustotal.com/gui/file/706b2d51d194b08ff33dd06626072e4ba3e32f411f00c2899a462d6ebeaa475f"
+VIRUSTOTAL_SONUC = "0/67"
 # İndirme ve Discord sayısı ancak bu eşikleri geçince rakamlar şeridinde görünür.
 INDIRME_ESIGI = 500
 DISCORD_ESIGI = 100
