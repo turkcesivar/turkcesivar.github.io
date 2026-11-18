@@ -8,13 +8,15 @@ Kullanım:  python uret.py          -> _site/ klasörüne bütün siteyi yazar
   /oyunlar/              bütün oyunlar (arama, durum süzgeci, sıralama)
   /oyun/<kimlik>/        her oyunun kendi sayfası
   /404.html, /sitemap.xml, /robots.txt
-GitHub'da main'e her gönderimde .github/workflows/yayinla.yml bunu çalıştırıp yayınlar.
+GitHub'da main'e her gönderimde ve her sabah .github/workflows/yayinla.yml bunu çalıştırıp yayınlar
+(sabah çalışması indirme ve Discord sayılarını tazeler).
 """
 
 import hashlib
 import html
 import json
 import shutil
+import urllib.request
 from pathlib import Path
 
 from PIL import Image
@@ -27,6 +29,13 @@ DISCORD = "https://discord.gg/nnNUCMUBJx"
 GITHUB = "https://github.com/turkcesivar/turkcesi-var"
 KREOSUS = "https://kreosus.com/turkcesivar"
 ISTEK_FORMU = GITHUB + "/issues/new?template=oyun-istegi.yml"
+EPOSTA = "iletisim@turkcesivar.com"
+# Son sürümün VirusTotal taraması. Yeni sürümde bu iki satırı güncelle.
+VIRUSTOTAL = "https://www.virustotal.com/gui/file/11f18389391760e51e58a85116a70d8be100d3905d26c25c22f34769d94961fa"
+VIRUSTOTAL_SONUC = "0/66"
+# İndirme ve Discord sayısı ancak bu eşikleri geçince rakamlar şeridinde görünür.
+INDIRME_ESIGI = 500
+DISCORD_ESIGI = 100
 VITRIN_SAYISI = 6
 BOYLAR = (640, 1024, 1600)  # her oyun görselinden üretilen genişlikler; asıl dosya da yayınlanır
 KART_BOYU = "(max-width: 900px) calc(100vw - 32px), 360px"
@@ -161,6 +170,7 @@ def sayfa(baslik, aciklama, yol, govde, gorsel="/gorseller/paylasim.png", bas_ek
         <a href="{GITHUB}">GitHub</a>
         <a href="{DISCORD}" rel="noopener">Discord</a>
         <a href="{KREOSUS}" rel="noopener">Kreosus</a>
+        <a href="mailto:{EPOSTA}">{EPOSTA}</a>
       </nav>
     </div>
   </footer>
@@ -210,6 +220,130 @@ SIRADAKI = f"""          <article class="oyun siradaki">
           </article>"""
 
 
+# --- Ana sayfa bölümleri: rakamlar, karşılaştırma, sırada --------------------
+
+def json_getir(adres):
+    """İnternetten JSON okur; olmazsa None (site yine üretilir, ilgili rakam gizlenir)."""
+    try:
+        istek = urllib.request.Request(adres, headers={"User-Agent": "turkcesivar-site", "Accept": "application/json"})
+        with urllib.request.urlopen(istek, timeout=15) as yanit:
+            return json.load(yanit)
+    except Exception as hata:  # ağ yok, sınır aşıldı vb.
+        print(f"  uyarı: {adres} okunamadı ({hata})")
+        return None
+
+
+def indirme_sayisi():
+    surumler = json_getir("https://api.github.com/repos/turkcesivar/turkcesi-var/releases?per_page=100")
+    if not isinstance(surumler, list):
+        return None
+    return sum(a.get("download_count", 0) for s in surumler for a in s.get("assets", []) if a.get("name", "").endswith(".exe"))
+
+
+def discord_sayisi():
+    kod = DISCORD.rstrip("/").rsplit("/", 1)[-1]
+    davet = json_getir(f"https://discord.com/api/v10/invites/{kod}?with_counts=true")
+    return davet.get("approximate_member_count") if isinstance(davet, dict) else None
+
+
+def yuvarla(n):
+    """59094 -> '59.000+', 1234 -> '1.200+', 640 -> '600+'."""
+    adim = 1000 if n >= 10000 else 100 if n >= 1000 else 10 if n >= 100 else 1
+    return sayi(n // adim * adim) + ("+" if n >= 100 else "")
+
+
+def toplam_satir(hazir):
+    """Aynı metin dosyasını paylaşan oyunlar (metin_grubu) toplamda bir kez sayılır."""
+    gruplar = {}
+    for o in hazir:
+        if o.get("satir"):
+            anahtar = o.get("metin_grubu") or o["kimlik"]
+            gruplar[anahtar] = max(gruplar.get(anahtar, 0), o["satir"])
+    return sum(gruplar.values())
+
+
+def rakamlar_html(oyunlar):
+    hazir = [o for o in oyunlar if o["durum"] == "hazir"]
+    ogeler = [(str(len(hazir)), "oyun tamamen Türkçe", "/oyunlar/")]
+    satir = toplam_satir(hazir)
+    if satir:
+        ogeler.append((yuvarla(satir), "satır Türkçeye çevrildi", None))
+    indirme = indirme_sayisi()
+    if indirme and indirme >= INDIRME_ESIGI:
+        ogeler.append((yuvarla(indirme), "indirme", GITHUB + "/releases"))
+    uye = discord_sayisi()
+    if uye and uye >= DISCORD_ESIGI:
+        ogeler.append((yuvarla(uye), "kişilik Discord topluluğu", DISCORD))
+    ogeler.append((VIRUSTOTAL_SONUC, "VirusTotal taraması", VIRUSTOTAL))
+    ogeler.append(("0 ₺", "ücretsiz, reklamsız", None))
+    print(f"  rakamlar: {len(hazir)} oyun, {satir} satır, indirme {indirme}, discord {uye}")
+    parcalar = []
+    for deger, yazi, adres in ogeler:
+        ic = f'<span class="rakam-deger">{e(deger)}</span><span class="rakam-yazi">{e(yazi)}</span>'
+        if adres:
+            rel = ' rel="noopener"' if adres.startswith("http") else ""
+            ic = f'<a href="{adres}"{rel}>{ic}</a>'
+        parcalar.append(f"          <li>{ic}</li>")
+    return f"""    <section class="rakamlar" aria-label="Rakamlarla Türkçesi Var">
+      <ul class="kap rakam-listesi">
+{chr(10).join(parcalar)}
+      </ul>
+    </section>"""
+
+
+def karsilastirma_html():
+    yol = KOK / "veri" / "karsilastirma.json"
+    if not yol.exists():
+        return ""
+    gruplar = json.loads(yol.read_text(encoding="utf-8"))["gruplar"]
+    sekmeler, paneller = [], []
+    for i, g in enumerate(gruplar):
+        secili = "true" if i == 0 else "false"
+        sira = "" if i == 0 else ' tabindex="-1"'
+        sekmeler.append(f'<button type="button" role="tab" id="sekme-{g["kimlik"]}" aria-controls="panel-{g["kimlik"]}" aria-selected="{secili}"{sira}>{e(g["sekme"])}</button>')
+        satirlar = "\n".join(
+            f'              <li><span class="asil" lang="en"><abbr title="İngilizce orijinal">EN</abbr>{e(en)}</span>'
+            f'<span class="turkcesi"><abbr title="Türkçesi Var çevirisi">TR</abbr>{e(tr)}</span></li>'
+            for en, tr in g["satirlar"])
+        paneller.append(f"""          <div class="kars-panel" role="tabpanel" id="panel-{g['kimlik']}" aria-labelledby="sekme-{g['kimlik']}" data-kars-panel>
+            <figure class="kars-gorsel" data-galeri>{resim(g['gorsel'], g['gorsel_yazi'], KART_BOYU.replace('360px', '540px'), buyuk=True)}<figcaption>{e(g['gorsel_yazi'])}</figcaption></figure>
+            <ul class="kars-satirlar">
+{satirlar}
+            </ul>
+          </div>""")
+    return f"""    <section class="bolum" id="karsilastirma" aria-labelledby="kars-baslik">
+      <div class="kap">
+        <h2 id="kars-baslik">Orijinali ve Türkçesi</h2>
+        <p class="bolum-alt">Kelimesi kelimesine değil, oyunun havasına uygun çeviri. Aşağıdaki satırlar oyunların gerçek metinlerinden ve Türkçesi Var'ın gerçek çevirilerinden.</p>
+        <div class="kars-sekmeler" role="tablist" aria-label="Oyun seç" data-kars-sekmeler hidden>{"".join(sekmeler)}</div>
+        <div class="kars">
+{chr(10).join(paneller)}
+        </div>
+      </div>
+    </section>"""
+
+
+def sirada_html(oyunlar):
+    """Çevrilen ve oylamadaki oyunlar; hiç yoksa bölüm hiç çıkmaz."""
+    sirada = [o for o in oyunlar if o["durum"] == "cevriliyor"] + [o for o in oyunlar if o["durum"] == "oylamada"]
+    if not sirada:
+        return ""
+    return f"""    <section class="bolum" id="sirada" aria-labelledby="sirada-baslik">
+      <div class="kap">
+        <div class="bolum-ust">
+          <div>
+            <h2 id="sirada-baslik">Sırada</h2>
+            <p class="bolum-alt">Şu an çevrilen ve oylamadaki oyunlar. Hangisinin önce geleceğini Discord'daki oylar belirler.</p>
+          </div>
+          <a class="dugme dugme-ikincil" href="{DISCORD}" rel="noopener">Oylamaya katıl →</a>
+        </div>
+        <div class="oyunlar">
+{chr(10).join(kart(o) for o in sirada[:VITRIN_SAYISI])}
+        </div>
+      </div>
+    </section>"""
+
+
 # --- Sayfalar ----------------------------------------------------------------
 
 def ana_sayfa(oyunlar):
@@ -231,7 +365,16 @@ def ana_sayfa(oyunlar):
         </div>
       </div>
     </section>"""
-    govde = (KOK / "sablonlar" / "ana.html").read_text(encoding="utf-8").replace("{{VITRIN}}", vitrin_html)
+    govde = (KOK / "sablonlar" / "ana.html").read_text(encoding="utf-8")
+    for yer, icerik in {
+        "{{RAKAMLAR}}": rakamlar_html(oyunlar),
+        "{{VITRIN}}": vitrin_html,
+        "{{SIRADA}}": sirada_html(oyunlar),
+        "{{KARSILASTIRMA}}": karsilastirma_html(),
+        "{{VIRUSTOTAL}}": VIRUSTOTAL,
+        "{{VIRUSTOTAL_SONUC}}": VIRUSTOTAL_SONUC,
+    }.items():
+        govde = govde.replace(yer, icerik)
     # Eski tek sayfa bağlantıları (/#metro-exodus gibi) oyun sayfasına yönlensin.
     eski = {o["eski_baglanti"]: o["kimlik"] for o in oyunlar if o.get("eski_baglanti")}
     yonlendir = ("\n  <script>(function(){var e=" + json.dumps(eski) +

@@ -82,6 +82,33 @@
     uygula();
   }
 
+  // --- Orijinali ve Türkçesi: sekmeler ---------------------------------------
+  // JS yoksa bütün paneller alt alta görünür; JS varsa sekmeyle biri seçilir.
+  var karsSekmeler = document.querySelector("[data-kars-sekmeler]");
+  if (karsSekmeler) {
+    var sekmeler = Array.prototype.slice.call(karsSekmeler.querySelectorAll("[role=tab]"));
+    var sec = function (sekme, odakla) {
+      sekmeler.forEach(function (s) {
+        var bu = s === sekme;
+        s.setAttribute("aria-selected", bu ? "true" : "false");
+        s.tabIndex = bu ? 0 : -1;
+        document.getElementById(s.getAttribute("aria-controls")).hidden = !bu;
+      });
+      if (odakla) sekme.focus();
+    };
+    karsSekmeler.hidden = false;
+    sec(sekmeler[0], false);
+    sekmeler.forEach(function (s, i) {
+      s.addEventListener("click", function () { sec(s, false); });
+      s.addEventListener("keydown", function (e) {
+        var yon = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!yon) return;
+        e.preventDefault();
+        sec(sekmeler[(i + yon + sekmeler.length) % sekmeler.length], true);
+      });
+    });
+  }
+
   // --- Görsel büyütücü ------------------------------------------------------
   var kutu = document.querySelector(".buyutec");
   if (!kutu || typeof kutu.showModal !== "function") return;

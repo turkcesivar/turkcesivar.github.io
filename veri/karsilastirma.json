@@ -1,0 +1,31 @@
+{
+  "_aciklama": "Ana sayfadaki 'Orijinali ve Türkçesi' bölümü. Satırlar oyunların gerçek metinlerinden ve Türkçesi Var'ın gerçek çevirilerinden alınır (ortak çeviri belleği); uydurma satır yazılmaz. Her grup bir sekme olur. gorsel: gorseller/ içindeki oyun içi Türkçe ekran görüntüsü.",
+  "gruplar": [
+    {
+      "kimlik": "redux",
+      "sekme": "Metro 2033 ve Last Light Redux",
+      "gorsel": "lastlight-pavel.jpg",
+      "gorsel_yazi": "Metro Last Light Redux, oyunun içinden",
+      "satirlar": [
+        ["That's one dead capitalist!", "Bir kapitalist eksildi!"],
+        ["Drop by anytime, young man!", "Yine beklerim, delikanlı!"],
+        ["Seems like hundred years ago...", "Yüz yıl olmuştur galiba..."],
+        ["Whoooo... I smell trouble...", "Vay be... Başımıza iş açılacak, kokusunu alıyorum..."],
+        ["Get the wounded out first!", "Önce yaralıları çıkarın!"]
+      ]
+    },
+    {
+      "kimlik": "exodus",
+      "sekme": "Metro Exodus",
+      "gorsel": "exodus-miller-anna.jpg",
+      "gorsel_yazi": "Metro Exodus Enhanced Edition, oyunun içinden",
+      "satirlar": [
+        ["Take this cleansing flame!", "Al bu arındırıcı alevi!"],
+        ["Brothers, the beast are attacking!", "Kardeşler, canavarlar saldırıyor!"],
+        ["I guess, it beats swimming...", "Bence yüzmekten iyi..."],
+        ["What’s that rustling noise?", "Bu hışırtı da nedir?"],
+        ["Chasing stupid squirrels...", "Aptal sincapların peşinde koşuyoruz..."]
+      ]
+    }
+  ]
+}

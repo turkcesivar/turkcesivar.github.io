@@ -3,6 +3,8 @@ name: Siteyi üret ve yayınla
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "0 4 * * *"  # her sabah 07:00 (TSİ): indirme ve Discord sayıları tazelensin
   workflow_dispatch:
 
 permissions:
