@@ -15,6 +15,7 @@ GitHub'da main'e her gönderimde ve her sabah .github/workflows/yayinla.yml bunu
 import hashlib
 import html
 import json
+import re
 import shutil
 import urllib.request
 from pathlib import Path
@@ -113,6 +114,79 @@ def boylari_uret(dosyalar):
                     CIKTI / boy_adi(dosya, w).lstrip("/"), "JPEG", quality=86, optimize=True, progressive=True)
 
 
+# --- Arama motorları: yapılandırılmış veri (schema.org JSON-LD) ---------------
+
+def duz(metin):
+    """HTML etiketlerini atar: '<strong>21.442</strong> satır' -> '21.442 satır'."""
+    return html.unescape(re.sub(r"<[^>]+>", "", metin)).strip()
+
+
+def jsonld(*nesneler):
+    """Google'ın okuduğu <script type="application/ld+json"> blokları."""
+    return "".join(
+        '\n  <script type="application/ld+json">' +
+        json.dumps({"@context": "https://schema.org", **n}, ensure_ascii=False).replace("</", "<\\/") +
+        "</script>" for n in nesneler)
+
+
+_son_surum = []
+
+
+def son_surum():
+    """Uygulamanın son sürüm numarası (GitHub'dan); okunamazsa None."""
+    if not _son_surum:
+        r = json_getir("https://api.github.com/repos/turkcesivar/turkcesi-var/releases/latest")
+        _son_surum.append(r["tag_name"].lstrip("v") if isinstance(r, dict) and r.get("tag_name") else None)
+    return _son_surum[0]
+
+
+def uygulama_bilgisi(**ek):
+    """Türkçesi Var'ı ücretsiz bir Windows uygulaması olarak tanıtan schema.org kaydı."""
+    kayit = {
+        "@type": "SoftwareApplication",
+        "name": "Türkçesi Var",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Windows 10, Windows 11",
+        "inLanguage": "tr",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "TRY"},
+        "downloadUrl": INDIR,
+        "url": SITE + "/",
+        "image": SITE + "/gorseller/simge-256.png",
+        "screenshot": SITE + "/gorseller/uygulama.jpg",
+        "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+        "isAccessibleForFree": True,
+        "publisher": {"@id": SITE + "/#kurulus"},
+    }
+    if son_surum():
+        kayit["softwareVersion"] = son_surum()
+    kayit.update(ek)
+    return kayit
+
+
+KURULUS = {
+    "@type": "Organization",
+    "@id": SITE + "/#kurulus",
+    "name": "Türkçesi Var",
+    "url": SITE + "/",
+    "logo": SITE + "/gorseller/simge-256.png",
+    "email": EPOSTA,
+    "sameAs": [GITHUB, DISCORD, KREOSUS],
+}
+
+
+def sss_bilgisi(sablon):
+    """Ana sayfadaki SSS'yi (<details>) Google'ın anladığı soru-cevap kaydına çevirir."""
+    sorular = re.findall(r"<details><summary>(.*?)</summary><p>(.*?)</p></details>", sablon, re.S)
+    return {"@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": duz(s), "acceptedAnswer": {"@type": "Answer", "text": duz(c)}}
+        for s, c in sorular]}
+
+
+def kisa_ad(o):
+    """Aramada kullanılan ad: 'Metro Exodus Enhanced Edition' -> 'Metro Exodus' (veri dosyasında kisa_ad varsa)."""
+    return o.get("kisa_ad") or o["ad"]
+
+
 # --- Ortak parçalar ----------------------------------------------------------
 
 def sayfa(baslik, aciklama, yol, govde, gorsel="/gorseller/paylasim.png", bas_ek=""):
@@ -124,6 +198,7 @@ def sayfa(baslik, aciklama, yol, govde, gorsel="/gorseller/paylasim.png", bas_ek
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{e(baslik)}</title>
   <meta name="description" content="{e(aciklama)}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0C0D10">
   <link rel="icon" href="/favicon.ico">
   <link rel="canonical" href="{SITE}{yol}">
@@ -379,11 +454,18 @@ def ana_sayfa(oyunlar):
     eski = {o["eski_baglanti"]: o["kimlik"] for o in oyunlar if o.get("eski_baglanti")}
     yonlendir = ("\n  <script>(function(){var e=" + json.dumps(eski) +
                  ",h=location.hash.slice(1);if(e[h])location.replace('/oyun/'+e[h]+'/');})();</script>")
-    adlar = ", ".join(o["ad"] for o in hazir)
+    adlar = ", ".join(kisa_ad(o) for o in hazir)
+    aciklama = (f"Ücretsiz Türkçe yama: {adlar} tek tıkla Türkçe. "
+                "Türkçesi Var oyun dosyası ya da DLL dağıtmaz; Türkçe yamayı senin bilgisayarında hazırlar, tek tıkla kaldırılır.")
+    veri = jsonld(
+        {"@type": "WebSite", "@id": SITE + "/#site", "name": "Türkçesi Var", "alternateName": "Türkçesi Var Türkçe Yama",
+         "url": SITE + "/", "inLanguage": "tr", "publisher": {"@id": SITE + "/#kurulus"}},
+        KURULUS,
+        uygulama_bilgisi(description=aciklama),
+        sss_bilgisi(govde))
     return sayfa(
-        "Türkçesi Var — Oyunlara güvenli, ücretsiz Türkçe yama",
-        f"Türkçesi Var, oyunlara tek tıkla Türkçe yama kuran ücretsiz ve açık kaynak bir uygulama. Türkçesi hazır: {adlar}. Dosya ya da DLL dağıtmaz, tek tıkla kaldırılır.",
-        "/", govde, bas_ek=yonlendir)
+        "Türkçesi Var — Oyunlara Ücretsiz Türkçe Yama",
+        aciklama, "/", govde, bas_ek=yonlendir + veri)
 
 
 def oyunlar_sayfasi(oyunlar):
@@ -426,15 +508,22 @@ def oyunlar_sayfasi(oyunlar):
         </div>
       </div>
     </section>"""
+    liste = jsonld(
+        {"@type": "ItemList", "name": "Türkçe yaması olan oyunlar", "itemListElement": [
+            {"@type": "ListItem", "position": i, "url": f"{SITE}/oyun/{o['kimlik']}/", "name": f"{o['ad']} Türkçe Yama"}
+            for i, o in enumerate(sirali, 1)]},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Ana sayfa", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Oyunlar", "item": SITE + "/oyunlar/"}]})
     return sayfa(
-        "Tüm oyunlar — Türkçesi Var",
-        f"Türkçesi Var ile Türkçe oynanabilen oyunlar: {ozet}. Ücretsiz, tek tıkla kur ve kaldır.",
-        "/oyunlar/", govde)
+        "Türkçe Yama Listesi: Tüm Oyunlar — Türkçesi Var",
+        f"Türkçe yaması olan oyunlar: {ozet}. {', '.join(kisa_ad(o) + ' Türkçe yama' for o in sirali[:4])}. Ücretsiz, tek tıkla kur ve kaldır.",
+        "/oyunlar/", govde, bas_ek=liste)
 
 
 def oyun_sayfasi(o, oyunlar):
     hazir = o["durum"] == "hazir"
-    eylem = (f'<a class="dugme dugme-ana" href="{INDIR}">Uygulamayı indir</a>' if hazir
+    eylem = (f'<a class="dugme dugme-ana" href="{INDIR}">Türkçe yamayı indir</a>' if hazir
              else f'<a class="dugme dugme-ana" href="{DISCORD}" rel="noopener">Discord\'da takip et</a>')
     turler = "".join(f'<span class="etiket-kucuk">{e(t)}</span>' for t in o.get("tur", []))
     neler = "\n".join(f"                <li>{m}</li>" for m in o.get("neler_turkce", []))
@@ -500,11 +589,34 @@ def oyun_sayfasi(o, oyunlar):
         </div>
       </div>
     </section>{diger_html}"""
-    aciklama = (f"{o['ad']} için ücretsiz Türkçe yama" +
-                (f": {sayi(o['satir'])} satır çevrildi, tamamı Türkçe" if o.get("satir") else "") +
-                ". Türkçesi Var ile tek tıkla kur, tek tıkla kaldır; oyun dosyası ya da DLL indirmeden.")
-    return sayfa(f"{o['ad']} Türkçe Yama — Türkçesi Var", aciklama,
-                 f"/oyun/{o['kimlik']}/", govde, gorsel=boy_adi(o["kapak"], 1600) if olcu(o["kapak"])[0] > 1600 else f"/gorseller/{o['kapak']}")
+    kisa = kisa_ad(o)
+    aciklama = (f"{kisa} Türkçe yama" +
+                (f": {sayi(o['satir'])} satır Türkçe; {duz(o['ozet'])}" if o.get("satir") else f": {duz(o['ozet'])}") +
+                " Ücretsiz indir, tek tıkla kur ve kaldır; oyun dosyası ya da DLL indirmeden.")
+    kapak = boy_adi(o["kapak"], 1600) if olcu(o["kapak"])[0] > 1600 else f"/gorseller/{o['kapak']}"
+    adres = f"{SITE}/oyun/{o['kimlik']}/"
+    yama = uygulama_bilgisi(
+        name=f"{o['ad']} Türkçe Yama",
+        alternateName=[f"{kisa} Türkçe Yama", f"{kisa} Türkçe Altyazı", f"{kisa} Türkçe"],
+        url=adres,
+        description=aciklama,
+        image=SITE + kapak,
+        screenshot=[f"{SITE}/gorseller/{g['dosya']}" for g in o.get("gorseller", [])][:5],
+        datePublished=o["eklenme"],
+        dateModified=o.get("guncelleme", o["eklenme"]),
+        about={"@type": "VideoGame", "name": o["ad"], "gamePlatform": ["PC"] + list(o.get("platform", []))})
+    if not hazir:  # henüz indirilemez: fiyat/indirme bilgisi verme
+        yama.pop("offers")
+        yama.pop("downloadUrl")
+    veri = jsonld(
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Ana sayfa", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Oyunlar", "item": SITE + "/oyunlar/"},
+            {"@type": "ListItem", "position": 3, "name": f"{o['ad']} Türkçe Yama", "item": adres}]},
+        yama)
+    baslik = (f"{kisa} Türkçe Yama İndir — Ücretsiz | Türkçesi Var" if hazir
+              else f"{kisa} Türkçe Yama ({DURUMLAR[o['durum']][1]}) — Türkçesi Var")
+    return sayfa(baslik, aciklama, f"/oyun/{o['kimlik']}/", govde, gorsel=kapak, bas_ek=veri)
 
 
 def bulunamadi():

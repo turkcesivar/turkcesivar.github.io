@@ -1,5 +1,5 @@
 {
-  "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. metin_grubu: aynı metin dosyasını paylaşan oyunlara aynı ad verilir; ana sayfadaki toplam satır sayısında o dosya bir kez sayılır (sitede görünmez). Metinlerde <strong>, <em>, <a> kullanılabilir.",
+  "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. metin_grubu: aynı metin dosyasını paylaşan oyunlara aynı ad verilir; ana sayfadaki toplam satır sayısında o dosya bir kez sayılır (sitede görünmez). kisa_ad: insanların aramada yazdığı kısa ad (ör. Metro Exodus); sayfa başlığında kullanılır. Metinlerde <strong>, <em>, <a> kullanılabilir.",
   "oyunlar": [
     {
       "kimlik": "metro-last-light-redux",
@@ -35,6 +35,7 @@
       "kimlik": "metro-exodus",
       "eski_baglanti": "metro-exodus",
       "ad": "Metro Exodus Enhanced Edition",
+      "kisa_ad": "Metro Exodus",
       "durum": "hazir",
       "eklenme": "2026-11-17",
       "platform": ["Steam", "Epic Games"],
