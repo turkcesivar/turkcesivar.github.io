@@ -145,7 +145,7 @@ def sayfa(baslik, aciklama, yol, govde, gorsel="/gorseller/paylasim.png", bas_ek
 
   <header class="ust">
     <div class="kap ust-ic">
-      <a href="/" class="logo" aria-label="Türkçesi Var ana sayfa"><img src="/gorseller/logo.svg" alt="Türkçesi Var" width="190" height="50"></a>
+      <a href="/" class="logo" aria-label="Türkçesi Var ana sayfa"><img src="/gorseller/logo-yatay.svg" alt="Türkçesi Var" width="162" height="33"></a>
       <nav aria-label="Ana menü">
         <a href="/oyunlar/">Oyunlar</a>
         <a href="/#nasil">Nasıl çalışır</a>
@@ -163,7 +163,7 @@ def sayfa(baslik, aciklama, yol, govde, gorsel="/gorseller/paylasim.png", bas_ek
 
   <footer class="alt-bilgi">
     <div class="kap alt-ic">
-      <img src="/gorseller/logo.svg" alt="Türkçesi Var" width="150" height="40">
+      <img src="/gorseller/logo-yatay.svg" alt="Türkçesi Var" width="118" height="24">
       <p>Kaynak kodu GNU GPL v3.0 ve ek şartlarıyla, Türkçe çeviriler CC BY-NC-ND 4.0 ile korunur. Oyunlar ve orijinal metinleri yapımcılarına aittir; Türkçesi Var resmi bir yapımcı ürünü değildir. Resmi sürümler yalnızca <a href="{GITHUB}">GitHub sayfasından</a> yayımlanır.</p>
       <nav aria-label="Alt bağlantılar">
         <a href="/oyunlar/">Oyunlar</a>

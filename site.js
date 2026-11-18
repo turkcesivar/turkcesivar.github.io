@@ -82,6 +82,62 @@
     uygula();
   }
 
+  // --- Yumuşak efektler -------------------------------------------------------
+  var azalt = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Kaydırınca üst menünün altına ince gölge.
+  var ust = document.querySelector(".ust");
+  if (ust) {
+    var golge = function () { ust.classList.toggle("golgeli", window.scrollY > 8); };
+    window.addEventListener("scroll", golge, { passive: true });
+    golge();
+  }
+
+  // Rakamlar sayarak dolsun: "59.000+" -> 0'dan 59.000'e; sayı olmayanlar ("0/66") olduğu gibi kalır.
+  var say = function (el) {
+    var m = /^([\d.]+)(\+?)$/.exec(el.textContent.trim());
+    if (!m || azalt) return;
+    var son = parseInt(m[1].replace(/\./g, ""), 10), asil = el.textContent, bas = null;
+    if (!(son > 9)) return;
+    var adim = function (t) {
+      if (bas === null) bas = t;
+      var o = Math.min(1, (t - bas) / 1200), k = 1 - Math.pow(1 - o, 3);
+      el.textContent = o < 1 ? Math.round(son * k).toLocaleString("tr-TR") + m[2] : asil;
+      if (o < 1) requestAnimationFrame(adim);
+    };
+    requestAnimationFrame(adim);
+  };
+
+  // Bölümler ekrana girerken aşağıdan süzülerek gelir; aynı satırdakiler sırayla.
+  // JS yoksa ya da hareket azaltılmışsa hiçbir şey gizlenmez.
+  if (!azalt && "IntersectionObserver" in window) {
+    var secici = ".bolum h2, .bolum .bolum-alt, .oyunlar > *, .adimlar > li, .maddeler > li, #sss details, .kartlar > .kart, " +
+      ".kars-gorsel, .kars-satirlar > li, .istek-seridi, .detay-metin, .galeri > figure, .rakam-listesi > li";
+    var gozcu = new IntersectionObserver(function (girdiler) {
+      girdiler.forEach(function (g) {
+        if (!g.isIntersecting) return;
+        var el = g.target;
+        gozcu.unobserve(el);
+        el.classList.add("gorundu");
+        var sayi = el.querySelector(".rakam-deger");
+        if (sayi) say(sayi);
+        // Belirme bitince sınıflar kalkar; kartların kendi hover efektleri karışmasın.
+        setTimeout(function () {
+          el.classList.remove("gizle-belir", "gorundu");
+          el.style.removeProperty("--gecikme");
+        }, 1400);
+      });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.08 });
+    Array.prototype.slice.call(document.querySelectorAll(secici)).forEach(function (el) {
+      if (el.closest(".giris") || el.parentNode.closest(".gizle-belir")) return;
+      var kardesler = Array.prototype.slice.call(el.parentNode.children);
+      var sira = Math.min(kardesler.indexOf(el), 6);
+      el.style.setProperty("--gecikme", sira * 0.07 + "s");
+      el.classList.add("gizle-belir");
+      gozcu.observe(el);
+    });
+  }
+
   // --- Orijinali ve Türkçesi: sekmeler ---------------------------------------
   // JS yoksa bütün paneller alt alta görünür; JS varsa sekmeyle biri seçilir.
   var karsSekmeler = document.querySelector("[data-kars-sekmeler]");
