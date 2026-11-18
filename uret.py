@@ -21,7 +21,7 @@ from PIL import Image
 
 KOK = Path(__file__).resolve().parent
 CIKTI = KOK / "_site"
-SITE = "https://turkcesivar.github.io"
+SITE = "https://turkcesivar.com"
 INDIR = "https://github.com/turkcesivar/turkcesi-var/releases/latest/download/TurkcesiVar-Kurulum.exe"
 DISCORD = "https://discord.gg/nnNUCMUBJx"
 GITHUB = "https://github.com/turkcesivar/turkcesi-var"

@@ -1,6 +1,6 @@
 # turkcesivar.github.io
 
-[Türkçesi Var](https://github.com/turkcesivar/turkcesi-var)'ın tanıtım sitesi: https://turkcesivar.github.io
+[Türkçesi Var](https://github.com/turkcesivar/turkcesi-var)'ın tanıtım sitesi: https://turkcesivar.com
 
 ## Yeni oyun eklemek
 
