@@ -182,10 +182,15 @@ def rozet(o):
     return f'<span class="rozet rozet-{o["durum"]}">{DURUMLAR[o["durum"]][0]}</span>'
 
 
+def satir_notu(o):
+    """Satır sayısının yanındaki açıklama (ör. Redux oyunlarının ortak metin tablosu); yoksa boş."""
+    return f" ({e(o['satir_notu'])})" if o.get("satir_notu") else ""
+
+
 def kart(o, baslik_etiketi="h3"):
     ozet = o["ozet"]
     if o.get("satir"):
-        satir = f'<strong>{sayi(o["satir"])} satır</strong> — '
+        satir = f'<strong>{sayi(o["satir"])} satır çevrildi</strong>{satir_notu(o)} — '
     else:  # özet cümle başında kalır: ilk harfi Türkçe kurala göre büyüt
         satir = ""
         ozet = {"i": "İ", "ı": "I"}.get(ozet[0], ozet[0].upper()) + ozet[1:]
@@ -313,7 +318,7 @@ def oyun_sayfasi(o, oyunlar):
         </div>
       </div>
     </section>"""
-    satir_bilgi = f' · {sayi(o["satir"])} satır' if o.get("satir") else ""
+    satir_bilgi = f' · {sayi(o["satir"])} satır çevrildi{satir_notu(o)}' if o.get("satir") else ""
     govde = f"""    <section class="bolum sayfa-ust">
       <div class="kap">
         <nav class="kirinti" aria-label="Konum"><a href="/oyunlar/">Oyunlar</a> <span aria-hidden="true">›</span> <span>{e(o['ad'])}</span></nav>
@@ -358,7 +363,8 @@ def oyun_sayfasi(o, oyunlar):
       </div>
     </section>{diger_html}"""
     aciklama = (f"{o['ad']} için ücretsiz Türkçe yama" +
-                (f": {sayi(o['satir'])} satırın tamamı Türkçe" if o.get("satir") else "") +
+                (f": {sayi(o['satir'])} satır çevrildi" + (f" ({o['satir_notu']})" if o.get("satir_notu") else "") +
+                 ", tamamı Türkçe" if o.get("satir") else "") +
                 ". Türkçesi Var ile tek tıkla kur, tek tıkla kaldır; oyun dosyası ya da DLL indirmeden.")
     return sayfa(f"{o['ad']} Türkçe Yama — Türkçesi Var", aciklama,
                  f"/oyun/{o['kimlik']}/", govde, gorsel=boy_adi(o["kapak"], 1600) if olcu(o["kapak"])[0] > 1600 else f"/gorseller/{o['kapak']}")

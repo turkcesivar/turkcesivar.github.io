@@ -1,5 +1,5 @@
 {
-  "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. Metinlerde <strong>, <em>, <a> kullanılabilir.",
+  "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. Metinlerde <strong>, <em>, <a> kullanılabilir. satir_notu (isteğe bağlı): satır sayısının yanında parantez içinde gösterilir (ör. ortak metin tablosu).",
   "oyunlar": [
     {
       "kimlik": "metro-last-light-redux",
@@ -9,6 +9,7 @@
       "platform": ["Steam"],
       "tur": ["Aksiyon", "FPS", "Korku"],
       "satir": 21442,
+      "satir_notu": "iki Redux oyununun ortak metin tablosu",
       "ozet": "menüler, altyazılar, görev defteri, ipuçları ve silah ekranı.",
       "aciklama": "Metro 2033'ün devamı Last Light baştan sona Türkçe: Artyom'un Karanlık Olan'ın peşindeki yolculuğunun her satırı.",
       "neler_turkce": [
@@ -69,6 +70,7 @@
       "platform": ["Steam", "Epic Games"],
       "tur": ["Aksiyon", "FPS", "Korku"],
       "satir": 21442,
+      "satir_notu": "iki Redux oyununun ortak metin tablosu",
       "ozet": "menüler, altyazılar, notlar ve ipuçları.",
       "aciklama": "Moskova metrosunda geçen ilk Metro oyunu tamamen Türkçe. Türkçesi Var'ın ilk oyunu.",
       "neler_turkce": [
