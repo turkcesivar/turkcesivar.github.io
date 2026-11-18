@@ -1,5 +1,5 @@
 {
-  "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. metin_grubu: aynı metin dosyasını paylaşan oyunlara aynı ad verilir; ana sayfadaki toplam satır sayısında o dosya bir kez sayılır (sitede görünmez). kisa_ad: insanların aramada yazdığı kısa ad (ör. Metro Exodus); sayfa başlığında kullanılır. Metinlerde <strong>, <em>, <a> kullanılabilir.",
+  "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. kart_kapak: kartta gösterilen kapak (oyunun Steam kapak görseli; yoksa kapak). metin_grubu: aynı metin dosyasını paylaşan oyunlara aynı ad verilir; ana sayfadaki toplam satır sayısında o dosya bir kez sayılır (sitede görünmez). kisa_ad: insanların aramada yazdığı kısa ad (ör. Metro Exodus); sayfa başlığında kullanılır. Metinlerde <strong>, <em>, <a> kullanılabilir.",
   "oyunlar": [
     {
       "kimlik": "mafia-the-old-country",
@@ -27,6 +27,7 @@
       "surum": "Steam sürümü, güncel yama (Kasım 2026). Oyunun kendi dosyalarına dokunulmaz: yanına küçük bir Türkçe paket eklenir; kaldırınca o paket silinir. Epic'teki sürümde de çalışması beklenir.",
       "kurulum": "Uygulamada Mafia: The Old Country'yi seç, <strong>Türkçe yap</strong>'a bas. Oyunda metin dilini English bırak.",
       "kapak": "mafia-luca.jpg",
+      "kart_kapak": "kapak-mafia-the-old-country.jpg",
       "gorseller": [
         {
           "dosya": "mafia-luca.jpg",
@@ -85,6 +86,7 @@
       "surum": "<strong>Redux</strong> sürümü. 2013'teki orijinal Metro: Last Light desteklenmiyor. Steam'de denendi; Epic'teki Redux sürümünde de çalışması beklenir.",
       "kurulum": "Uygulamada Metro Last Light Redux'ı seç, <strong>Türkçe yap</strong>'a bas. Oyunda metin dilini English bırak, altyazıları aç.",
       "kapak": "lastlight-pavel.jpg",
+      "kart_kapak": "kapak-metro-last-light-redux.jpg",
       "gorseller": [
         {"dosya": "lastlight-acilis.jpg", "yazi": "Açılış ve ara sahneler", "alt": "Açılış sahnesinde Türkçe altyazı"},
         {"dosya": "lastlight-pavel.jpg", "yazi": "Konuşma altyazıları", "alt": "Pavel'in konuşmasında Türkçe altyazı"},
@@ -117,6 +119,7 @@
       "surum": "<strong>Enhanced Edition</strong> (Steam, Epic) ve <strong>normal sürüm</strong> (Steam). İkisi aynı çeviriyi kullanır; uygulama hangisini kurduğunu kendisi anlar.",
       "kurulum": "Uygulamada Metro Exodus Enhanced Edition'ı seç, <strong>Türkçe yap</strong>'a bas. Oyunda dili English bırak, altyazıları aç.",
       "kapak": "exodus-doktor.jpg",
+      "kart_kapak": "kapak-metro-exodus.jpg",
       "gorseller": [
         {"dosya": "exodus-doktor.jpg", "yazi": "Uzun konuşmalar da tek parça Türkçe", "alt": "Doktorun Türkçe altyazılı konuşması"},
         {"dosya": "exodus-miller-anna.jpg", "yazi": "Ara sahne ve konuşmalar", "alt": "Miller ve Anna'nın Türkçe altyazılı konuşması"},
@@ -147,6 +150,7 @@
       "surum": "<strong>Redux</strong> sürümü. 2010'daki orijinal Metro 2033 desteklenmiyor.",
       "kurulum": "Uygulamada Metro 2033 Redux'ı seç, <strong>Türkçe yap</strong>'a bas. Oyunda dili English bırak, altyazıları aç.",
       "kapak": "metro2033-altyazi.jpg",
+      "kart_kapak": "kapak-metro-2033-redux.jpg",
       "gorseller": [
         {"dosya": "metro2033-prolog.jpg", "yazi": "Prolog ve bölüm geçişleri", "alt": "Prolog ekranı Türkçe"},
         {"dosya": "metro2033-sahne.jpg", "yazi": "Ara sahne altyazıları", "alt": "Ara sahnede Türkçe altyazı"},

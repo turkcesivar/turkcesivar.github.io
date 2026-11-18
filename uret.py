@@ -275,7 +275,7 @@ def kart(o, baslik_etiketi="h3"):
         satir = ""
         ozet = {"i": "İ", "ı": "I"}.get(ozet[0], ozet[0].upper()) + ozet[1:]
     return f"""          <article class="oyun" data-durum="{o['durum']}" data-ad="{e(o['ad'])}" data-eklenme="{o['eklenme']}" data-ara="{e(arama_metni(o))}">
-            {resim(o['kapak'], o['ad'] + ' Türkçe', KART_BOYU)}
+            {resim(o.get('kart_kapak') or o['kapak'], o['ad'] + ' Türkçe', KART_BOYU)}
             <div class="oyun-ic">
               <{baslik_etiketi}><a class="oyun-ac" href="/oyun/{o['kimlik']}/">{e(o['ad'])}</a></{baslik_etiketi}>
               <p class="platform">{e(' · '.join(o['platform']))}</p>
@@ -644,7 +644,7 @@ def denetle(oyunlar):
         if o["kimlik"] in kimlikler:
             raise SystemExit(f"HATA: {o['kimlik']} iki kez yazılmış")
         kimlikler.add(o["kimlik"])
-        for dosya in [o["kapak"], *[g["dosya"] for g in o.get("gorseller", [])]]:
+        for dosya in [o["kapak"], *([o["kart_kapak"]] if o.get("kart_kapak") else []), *[g["dosya"] for g in o.get("gorseller", [])]]:
             if not (KOK / "gorseller" / dosya).exists():
                 raise SystemExit(f"HATA: {o['kimlik']}: gorseller/{dosya} yok")
 
@@ -668,7 +668,7 @@ def main():
     for dogrulama in KOK.glob("google*.html"):
         shutil.copy2(dogrulama, CIKTI / dogrulama.name)
 
-    boylari_uret({o["kapak"] for o in oyunlar} | {g["dosya"] for o in oyunlar for g in o.get("gorseller", [])})
+    boylari_uret({o["kapak"] for o in oyunlar} | {o["kart_kapak"] for o in oyunlar if o.get("kart_kapak")} | {g["dosya"] for o in oyunlar for g in o.get("gorseller", [])})
     yaz("index.html", ana_sayfa(oyunlar))
     yaz("oyunlar/index.html", oyunlar_sayfasi(oyunlar))
     for o in oyunlar:
