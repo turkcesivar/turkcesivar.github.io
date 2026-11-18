@@ -2,6 +2,70 @@
   "_aciklama": "Sitedeki bütün oyunlar burada. Yeni oyun için bir kayıt ekle, görsellerini gorseller/ klasörüne koy, main'e gönder; site kendiliğinden yeniden üretilir. durum: hazir | cevriliyor | oylamada. metin_grubu: aynı metin dosyasını paylaşan oyunlara aynı ad verilir; ana sayfadaki toplam satır sayısında o dosya bir kez sayılır (sitede görünmez). kisa_ad: insanların aramada yazdığı kısa ad (ör. Metro Exodus); sayfa başlığında kullanılır. Metinlerde <strong>, <em>, <a> kullanılabilir.",
   "oyunlar": [
     {
+      "kimlik": "mafia-the-old-country",
+      "ad": "Mafia: The Old Country",
+      "durum": "hazir",
+      "eklenme": "2026-11-18",
+      "platform": [
+        "Steam"
+      ],
+      "tur": [
+        "Aksiyon",
+        "Macera",
+        "Hikâye"
+      ],
+      "satir": 29097,
+      "ozet": "ara sahneler, altyazılar, düşman ve yaya konuşmaları, notlar, mektuplar ve Intermezzo bölümü dahil.",
+      "aciklama": "1900'lerin Sicilya'sında, kükürt madeninden kaçıp Torrisi ailesine katılan Enzo Favara'nın hikâyesi baştan sona Türkçe. Sicilya ve İtalyanca sözler oyunun havası bozulmasın diye olduğu gibi bırakıldı.",
+      "neler_turkce": [
+        "<strong>29.097 satırın tamamı:</strong> menüler, ayarlar, ara sahneler, altyazılar, görevler ve ipuçları",
+        "Düşmanların, yayaların ve at üstü takiplerin kısa konuşmaları",
+        "Notlar, mektuplar, gazeteler ve aranan posterleri",
+        "Sonradan eklenen <strong>Intermezzo</strong> bölümü",
+        "Sicilya/İtalyanca sözler (<em>carusu</em>, <em>Minchia</em>, <em>Don</em>…) ve kişi adları orijinal hâliyle bırakıldı"
+      ],
+      "surum": "Steam sürümü, güncel yama (Kasım 2026). Oyunun kendi dosyalarına dokunulmaz: yanına küçük bir Türkçe paket eklenir; kaldırınca o paket silinir. Epic'teki sürümde de çalışması beklenir.",
+      "kurulum": "Uygulamada Mafia: The Old Country'yi seç, <strong>Türkçe yap</strong>'a bas. Oyunda metin dilini English bırak.",
+      "kapak": "mafia-luca.jpg",
+      "gorseller": [
+        {
+          "dosya": "mafia-luca.jpg",
+          "yazi": "Konuşma altyazıları",
+          "alt": "Luca'nın at üstündeki konuşmasında Türkçe altyazı"
+        },
+        {
+          "dosya": "mafia-gaetano.jpg",
+          "yazi": "Madende ilk görev",
+          "alt": "Gaetano'nun konuşmasında Türkçe altyazı ve görev"
+        },
+        {
+          "dosya": "mafia-mektup.jpg",
+          "yazi": "Mektuplar",
+          "alt": "Yönetim kurulu mektubu Türkçe"
+        },
+        {
+          "dosya": "mafia-duyuru.jpg",
+          "yazi": "Notlar ve duyurular",
+          "alt": "Maden kapatıldı duyurusu Türkçe"
+        },
+        {
+          "dosya": "mafia-maden.jpg",
+          "yazi": "Hikâye",
+          "alt": "Kükürt madeninde Türkçe altyazı"
+        },
+        {
+          "dosya": "mafia-ipucu.jpg",
+          "yazi": "Görevler ve ipuçları",
+          "alt": "Bıçak ipucu ve görev başlıkları Türkçe"
+        },
+        {
+          "dosya": "mafia-menu.jpg",
+          "yazi": "Ana menü",
+          "alt": "Türkçe ana menü"
+        }
+      ]
+    },
+    {
       "kimlik": "metro-last-light-redux",
       "ad": "Metro Last Light Redux",
       "durum": "hazir",

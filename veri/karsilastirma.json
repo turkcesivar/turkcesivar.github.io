@@ -2,6 +2,34 @@
   "_aciklama": "Ana sayfadaki 'Orijinali ve Türkçesi' bölümü. Satırlar oyunların gerçek metinlerinden ve Türkçesi Var'ın gerçek çevirilerinden alınır (ortak çeviri belleği); uydurma satır yazılmaz. Her grup bir sekme olur. gorsel: gorseller/ içindeki oyun içi Türkçe ekran görüntüsü.",
   "gruplar": [
     {
+      "kimlik": "mafia",
+      "sekme": "Mafia: The Old Country",
+      "gorsel": "mafia-luca.jpg",
+      "gorsel_yazi": "Mafia: The Old Country, oyunun içinden",
+      "satirlar": [
+        [
+          "In this family, loyalty is everything.",
+          "Bu ailede sadakat her şeydir."
+        ],
+        [
+          "Oh! The finest horseman in all of Sicily.",
+          "Ooo! Bütün Sicilya'nın en usta binicisi."
+        ],
+        [
+          "This isn't over, carusu.",
+          "Bu iş bitmedi, carusu."
+        ],
+        [
+          "Don Torrisi honors his commitments.",
+          "Don Torrisi verdiği sözü tutar."
+        ],
+        [
+          "Ah, finally. The guest of honor.",
+          "Ah, sonunda. Onur konuğu geldi."
+        ]
+      ]
+    },
+    {
       "kimlik": "redux",
       "sekme": "Metro 2033 ve Last Light Redux",
       "gorsel": "lastlight-pavel.jpg",
