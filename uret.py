@@ -32,8 +32,8 @@ KREOSUS = "https://kreosus.com/turkcesivar"
 ISTEK_FORMU = GITHUB + "/issues/new?template=oyun-istegi.yml"
 EPOSTA = "iletisim@turkcesivar.com"
 # Son sürümün VirusTotal taraması. Yeni sürümde bu iki satırı güncelle.
-VIRUSTOTAL = "https://www.virustotal.com/gui/file/706b2d51d194b08ff33dd06626072e4ba3e32f411f00c2899a462d6ebeaa475f"
-VIRUSTOTAL_SONUC = "0/67"
+VIRUSTOTAL = "https://www.virustotal.com/gui/file/f030ed94c64cbb0084d0eba4a09d994c8159a3a05d0a25551e7f6fe90ba560bf"
+VIRUSTOTAL_SONUC = "0/66"
 # İndirme ve Discord sayısı ancak bu eşikleri geçince rakamlar şeridinde görünür.
 INDIRME_ESIGI = 500
 DISCORD_ESIGI = 100
@@ -224,6 +224,7 @@ def sayfa(baslik, aciklama, yol, govde, gorsel="/gorseller/paylasim.png", bas_ek
       <nav aria-label="Ana menü">
         <a href="/oyunlar/">Oyunlar</a>
         <a href="/#nasil">Nasıl çalışır</a>
+        <a href="/#canli">Canlı Çeviri</a>
         <a href="/#guvenli">Güvenli mi?</a>
         <a href="/#sss">SSS</a>
         <a href="{DISCORD}" rel="noopener">Discord</a>
@@ -350,7 +351,7 @@ def rakamlar_html(oyunlar):
     if uye and uye >= DISCORD_ESIGI:
         ogeler.append((yuvarla(uye), "kişilik Discord topluluğu", DISCORD))
     ogeler.append((VIRUSTOTAL_SONUC, "VirusTotal taraması", VIRUSTOTAL))
-    ogeler.append(("0 ₺", "ücretsiz, reklamsız", None))
+    ogeler.append(("0 ₺", "Türkçe yamalar ücretsiz, reklamsız", None))
     print(f"  rakamlar: {len(hazir)} oyun, {satir} satır, indirme {indirme}, discord {uye}")
     parcalar = []
     for deger, yazi, adres in ogeler:
